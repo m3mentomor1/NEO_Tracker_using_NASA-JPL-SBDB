@@ -35,20 +35,42 @@ if response.status_code == 200:
         approach_distances.append(float(record[4]))  # Nominal approach distance (au)
         object_designations.append(record[0])  # Object primary designation
 
-    # Plot the data as a line graph
-    plt.figure(figsize=(10, 6))
-    plt.plot(approach_dates, approach_distances, marker='o', color='b', linestyle='-')
+    # Plot the data as a scatter plot
+    plt.figure(figsize=(12, 6))
+    scatter = plt.scatter(
+        approach_dates,
+        approach_distances,
+        c=approach_distances,
+        cmap='viridis',
+        s=100,
+        edgecolor='k',
+        alpha=0.8
+    )
+    
+    # Add a colorbar to indicate distances
+    cbar = plt.colorbar(scatter)
+    cbar.set_label('CA Distance Nominal (AU)')
+
+    # Annotate data points with object designations and distances
+    for i in range(len(approach_dates)):
+        plt.text(
+            approach_dates[i],
+            approach_distances[i],
+            f"{object_designations[i]}\n{approach_distances[i]:.5f} AU",
+            fontsize=8,
+            ha='right'
+        )
+
+    # Customize the plot
     plt.title('Near-Earth Objects (NEO) Approaching Earth')
     plt.xlabel('Close-Approach (CA) Date')
     plt.ylabel('CA Distance Nominal (AU)')
-    plt.xticks(rotation=45)
-    plt.grid(True)
-    
-    # Display AU values and object designations next to the data points
-    for i in range(len(approach_dates)):
-        plt.text(approach_dates[i], approach_distances[i], f'Object: {object_designations[i]}\n{approach_distances[i]:.5f} AU', fontsize=8, ha='right')
-
+    plt.xticks(rotation=45, fontsize=10)
+    plt.yticks(fontsize=10)
+    plt.grid(True, linestyle='--', alpha=0.7)
     plt.tight_layout()
+
+    # Show the plot
     plt.show()
 
 else:
